@@ -10,6 +10,17 @@
 
     <div class="bg-gray-50 p-6 rounded-lg shadow">
         <div class="mb-6 pb-6 border-b border-gray-200">
+              @if ($book->cover_image_path)
+            <div class="md:w-1/3 mb-4 md:mb-0 flex justify-center md:justify-start">
+                <img src="{{ Storage::url($book->cover_image_path) }}" alt="Capa de {{ $book->title }}" class="w-48 h-auto object-cover rounded-lg shadow-md">
+            </div>
+            @else
+            <div class="md:w-1/3 mb-4 md:mb-0 flex justify-center items-center">
+                <div class="w-48 h-64 bg-gray-200 flex items-center justify-center rounded-lg text-gray-500">
+                    Sem capa
+                </div>
+            </div>
+            @endif
             <h2 class="text-xl font-semibold text-gray-700 mb-2">Detalhes do Livro</h2>
             <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                 <div>

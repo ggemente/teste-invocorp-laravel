@@ -15,6 +15,8 @@ class Book extends Model
         'description',
         'publication_date',
         'author_id',
+        'cover_image_path'
+
     ];
 
     protected $casts = [

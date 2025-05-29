@@ -8,7 +8,7 @@
         <a href="{{ route('books.index') }}" class="text-blue-600 hover:text-blue-800">&larr; Voltar para a lista</a>
     </div>
 
-    <form action="{{ route('books.update', $book) }}" method="POST">
+    <form action="{{ route('books.update', $book) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -30,6 +30,20 @@
             @error('description')
             <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
             @enderror
+        </div>
+
+        <div class="mb-5">
+            <label for="cover_image" class="block text-gray-700 text-sm font-bold mb-2">Capa do Livro (JPG, PNG - Máx 2MB):</label>
+            <input type="file" name="cover_image" id="cover_image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('cover_image') border-red-500 @enderror" accept="image/jpeg,image/png,image/jpg">
+            @error('cover_image')
+            <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+            @enderror
+            @if ($book->cover_image_path)
+            <div class="mt-2">
+                <p class="text-sm text-gray-600">Capa atual:</p>
+                <img src="{{ Storage::url($book->cover_image_path) }}" alt="Capa de {{ $book->title }}" class="h-32 w-auto rounded shadow">
+            </div>
+            @endif
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5">

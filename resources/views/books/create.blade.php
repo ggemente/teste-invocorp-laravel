@@ -5,7 +5,7 @@
 @section('content')
     <h1 class="text-2xl font-semibold text-gray-700 mb-6">Adicionar Novo Livro</h1>
 
-    <form action="{{ route('books.store') }}" method="POST">
+    <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-4">
             <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Título:</label>
@@ -27,6 +27,14 @@
             <label for="publication_date" class="block text-gray-700 text-sm font-bold mb-2">Data de Publicação:</label>
             <input type="date" name="publication_date" id="publication_date" value="{{ old('publication_date') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('publication_date') border-red-500 @enderror" required>
             @error('publication_date')
+            <p class="text-red-500 text-xs italic">{{ $message }}</p>
+            @enderror
+        </div>
+
+           <div class="mb-4">
+            <label for="cover_image" class="block text-gray-700 text-sm font-bold mb-2">Capa do Livro (JPG, PNG - Máx 2MB):</label>
+            <input type="file" name="cover_image" id="cover_image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('cover_image') border-red-500 @enderror" accept="image/jpeg,image/png,image/jpg">
+            @error('cover_image')
             <p class="text-red-500 text-xs italic">{{ $message }}</p>
             @enderror
         </div>
