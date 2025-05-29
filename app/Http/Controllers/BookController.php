@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -12,7 +13,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $books = Book::with('author')->latest()->paginate(10);
+        return view('books.index', compact('books'));
     }
 
     /**
@@ -20,7 +22,8 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        $authors = Author::where('status', 'active')->orderBy('name')->get();
+        return view('books.create', compact('authors'));
     }
 
     /**
@@ -28,7 +31,16 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'publication_date' => 'required|date',
+            'author_id' => 'required|exists:authors,id',
+        ]);
+
+        Book::create($validatedData);
+
+        return redirect()->route('books.index')->with('success', 'Livro criado com sucesso!');
     }
 
     /**
@@ -36,7 +48,8 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        $book->load('author');
+        return view('books.show', compact('book'));
     }
 
     /**
@@ -44,7 +57,8 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        //
+        $authors = Author::where('status', 'active')->orderBy('name')->get();
+        return view('books.edit', compact('book', 'authors'));
     }
 
     /**
@@ -52,7 +66,16 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'publication_date' => 'required|date',
+            'author_id' => 'required|exists:authors,id',
+        ]);
+
+        $book->update($validatedData);
+
+        return redirect()->route('books.index')->with('success', 'Livro atualizado com sucesso!');
     }
 
     /**
@@ -60,6 +83,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return redirect()->route('books.index')->with('success', 'Livro excluído com sucesso!');
     }
 }
