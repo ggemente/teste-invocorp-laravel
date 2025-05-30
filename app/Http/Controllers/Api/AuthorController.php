@@ -11,17 +11,12 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+ 
     public function index()
     {
         return AuthorResource::collection(Author::orderBy('name')->paginate(10));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -37,17 +32,11 @@ class AuthorController extends Controller
         return new AuthorResource($author);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Author $author)
     {
         return new AuthorResource($author);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Author $author)
     {
         $validator = Validator::make($request->all(), [
@@ -62,10 +51,6 @@ class AuthorController extends Controller
         $author->update($validator->validated());
         return new AuthorResource($author);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Author $author)
     {
         if ($author->books()->count() > 0) {

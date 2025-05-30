@@ -42,7 +42,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully']);
     }
 
-    public function register(Request $request) // Opcional: Rota para registrar usuários e já logar
+    public function register(Request $request) 
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
