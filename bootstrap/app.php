@@ -15,12 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         ]);
-         $middleware->statefulApi();
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class, // Opcional, pode ser útil
+        ]);
+        $middleware->statefulApi();
     })
-
     ->withSchedule(function ($schedule) {
     })
-    
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

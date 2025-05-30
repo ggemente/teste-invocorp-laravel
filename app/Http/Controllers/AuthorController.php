@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AuthorController extends Controller
 {
@@ -12,8 +13,17 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        $authors = Author::orderBy('name')->paginate(10);
-        return view('authors.index', compact('authors'));
+        $authors = Author::withCount('books')->orderBy('name')->paginate(10)
+            ->through(fn ($author) => [
+                'id' => $author->id,
+                'name' => $author->name,
+                'status' => $author->status,
+                'books_count' => $author->books_count,
+            ]);
+
+        return Inertia::render('Authors/Index', [
+            'authors' => $authors
+        ]);
     }
 
     /**
@@ -21,7 +31,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        return view('authors.create');
+        return Inertia::render('Authors/Create');
     }
 
     /**
@@ -45,7 +55,20 @@ class AuthorController extends Controller
     public function show(Author $author)
     {
         $author->load('books');
-        return view('authors.show', compact('author'));
+        return Inertia::render('Authors/Show', [
+            'author' => [
+                'id' => $author->id,
+                'name' => $author->name,
+                'status' => $author->status,
+                'created_at' => $author->created_at->toDateTimeString(),
+                'updated_at' => $author->updated_at->toDateTimeString(),
+                'books' => $author->books->map(fn ($book) => [
+                    'id' => $book->id,
+                    'title' => $book->title,
+                    'publication_date' => $book->publication_date->format('Y-m-d'),
+                ]),
+            ]
+        ]);
     }
 
     /**
@@ -53,7 +76,13 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
-        return view('authors.edit', compact('author'));
+        return Inertia::render('Authors/Edit', [
+            'author' => [
+                'id' => $author->id,
+                'name' => $author->name,
+                'status' => $author->status,
+            ]
+        ]);
     }
 
     /**
