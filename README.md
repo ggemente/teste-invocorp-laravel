@@ -1,61 +1,68 @@
-# Projeto Invocorp
+# Instruções para Configurar e Rodar o Projeto Laravel com Sail (Docker-Only)
 
-Este é um projeto Laravel com Vue.js que utiliza o Laravel Sail para desenvolvimento em ambiente Docker.
+Este guia assume que você tem o Docker Desktop instalado e configurado para usar o WSL 2, e está em um terminal WSL.
 
-## Pré-requisitos
+1.  **Clone o Repositório:**
+    ```bash
+    git clone git@github.com:devGustavoMuniz/laravel-12-project.git
+    cd laravel-12-project/
+    ```
 
-Antes de começar, certifique-se de ter instalado em sua máquina:
+2.  **Copie o Arquivo de Ambiente:**
+    ```bash
+    cp .env.example .env
+    ```
+    *(Opcional: Revise o `.env` para configurações como `APP_PORT`)*
 
-- [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- [Git](https://git-scm.com/)
+3.  **Instale as Dependências do Composer usando Docker:**
+    (Isso instala o Laravel Sail e outras dependências PHP sem precisar de PHP/Composer no seu sistema host.)
+    ```bash
+    docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -v "$(pwd):/var/www/html" \
+        -w /var/www/html \
+        laravelsail/php83-composer:latest \
+        composer install --ignore-platform-reqs --no-interaction --no-plugins --no-scripts --prefer-dist
+    ```
 
-## Instalação e Configuração
+4.  **Construa e Inicie os Contêineres do Sail:**
+    ```bash
+    ./vendor/bin/sail up -d --build
+    ```
+    *Aguarde alguns instantes para os serviços iniciarem.*
 
-Siga os passos abaixo para configurar o projeto em seu ambiente local:
+5.  **Gere a Chave da Aplicação e link simbólico para storage:**
+    ```bash
+    ./vendor/bin/sail artisan key:generate
+    
+    ./vendor/bin/sail artisan storage:link
+    ```
 
-### 1. Clone o repositório
-```bash
-git clone git@github.com:ggemente/teste-invocorp-vue.git
-cd teste-invocorp-vue
-```
+6.  **Execute as Migrations e Seeders:**
+    ```bash
+    ./vendor/bin/sail artisan migrate:fresh --seed --force
+    ```
 
-### 2. Instale as dependências do PHP
-```bash
-composer install
-```
+7.  **Instale as Dependências NPM:**
+    ```bash
+    ./vendor/bin/sail npm install
+    ```
 
-### 3. Configure o arquivo de ambiente
-```bash
-cp .env.example .env
-```
+8.  **Construa os Assets NPM (para acesso inicial sem `npm run dev`):**
+    ```bash
+    ./vendor/bin/sail npm run build
+    ```
 
-### 4. Inicie os containers Docker
-```bash
-sail up -d
-```
+9.  **Acesse a Aplicação:**
+    Abra seu navegador e acesse `http://localhost` (ou a porta configurada em `APP_PORT` no seu `.env`).
 
-### 5. Instale as dependências do Node.js
-```bash
-sail npm install
-```
+10. **Para Desenvolvimento Frontend (opcional, em um novo terminal):**
+    Se você for fazer alterações no CSS/JS e quiser recarregamento automático:
+    ```bash
+    ./vendor/bin/sail npm run dev
+    ```
 
-### 6. Gere a chave da aplicação
-```bash
-sail artisan key:generate
-```
-
-### 7. Crie o link simbólico para storage
-```bash
-sail artisan storage:link
-```
-
-### 8. Execute as migrações do banco de dados
-```bash
-sail artisan migrate
-```
-
-### 9. Compile os assets do frontend
-```bash
-sail npm run build
-```
+11. **Para Parar os Contêineres:**
+    ```bash
+    ./vendor/bin/sail down
+    ```
