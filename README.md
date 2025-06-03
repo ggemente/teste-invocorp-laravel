@@ -1,4 +1,4 @@
-# Projeto Invocorpo
+# Projeto Invocorp
 
 Este é um projeto Laravel com Vue.js que utiliza o Laravel Sail para desenvolvimento em ambiente Docker.
 
