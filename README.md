@@ -3,8 +3,6 @@
 Este guia assume que você tem o Docker Desktop instalado e configurado para usar o WSL 2, e está em um terminal WSL.
 
 1.  **Clone o Repositório:**
-    ```bash
-    ```
 
 2.  **Copie o Arquivo de Ambiente:**
     ```bash
