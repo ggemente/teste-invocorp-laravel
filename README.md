@@ -4,7 +4,6 @@ Este guia assume que você tem o Docker Desktop instalado e configurado para usa
 
 1.  **Clone o Repositório:**
     ```bash
-    cd laravel-12-project/
     ```
 
 2.  **Copie o Arquivo de Ambiente:**
