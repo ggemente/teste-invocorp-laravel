@@ -4,7 +4,6 @@ Este guia assume que você tem o Docker Desktop instalado e configurado para usa
 
 1.  **Clone o Repositório:**
     ```bash
-    git clone git@github.com:devGustavoMuniz/laravel-12-project.git
     cd laravel-12-project/
     ```
 
